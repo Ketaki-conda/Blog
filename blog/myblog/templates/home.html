@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+  {% block content %}
+  <ul>
+  {% for post in object_list %}
+  <br>
+  <br>
+
+<div class="container">
+
+
+  <div class="row">
+  <div class="example-1 card">
+    <div class="wrapper">
+
+      <div class="date">
+        <span class="day">{{ post.post_date}}</span>
+      </div>
+
+		 <div class="image">
+       {% if post.image %}
+       <img src="{{ post.image.url }}">
+       {% endif %}
+		 </div>
+
+      <div class="data">
+        <div class="content">
+          <span class="author">{{ post.author.first_name }}</span>
+          <h1 class="title"><a href="#" class="cardTitle"> {{ post.title }}</a></h1>
+          <p class="text">{{ post.body|slice:"300" }}</p>
+          <center><h5><a href="{% url 'article-detail' post.pk %}">... Read More</a> </h5></center>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+  {% endfor%}
+  </ul>
+{% endblock %}
