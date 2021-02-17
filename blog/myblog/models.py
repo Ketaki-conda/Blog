@@ -10,6 +10,13 @@ class IpModel(models.Model):
     def __str__(self):
         return self.ip
 
+class Topic(models.Model):
+    topic_name = models.CharField(max_length = 255)
+    icon = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.topic_name
+
 class Post(models.Model):
     title=models.CharField(max_length=255)
     author=models.ForeignKey(User,on_delete=models.CASCADE)
@@ -17,8 +24,8 @@ class Post(models.Model):
     body=models.TextField()
     post_date=models.DateField(auto_now_add=True)
     likes=models.ManyToManyField(IpModel,related_name="post_likes",blank=True)
-
-
+    isFeatured = models.BooleanField()
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE,default = 1)
 
     def __str__(self):
       return self.title + " - " + str(self.author)
@@ -37,3 +44,4 @@ class Comment(models.Model):
 
     def __str__(self):
         return '%s - %s' % (self.post.title, self.name)
+

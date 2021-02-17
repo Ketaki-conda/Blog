@@ -1,13 +1,10 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView,UpdateView,DeleteView
-from .models import Post,Comment,IpModel
-from .forms import PostForm,CommentForm
+from .models import Post,Comment,IpModel,Topic
+from .forms import PostForm,CommentForm,TopicForm
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-
-
-
 
 #def home(request):
 #    return render(request,'home.html',{})
@@ -51,10 +48,15 @@ class AddPostView(CreateView):
     form_class=PostForm
     template_name="add_post.html"
 
+class AddTopicView(CreateView):
+    model=Topic
+    form_class=TopicForm
+    template_name="add_topic.html"
+
 class UpdatePostView(UpdateView):
     model=Post
     template_name="update_post.html"
-    fields=['title', 'body','image']
+    fields=['title', 'body','image','isFeatured']
 
 class DeletePostView(DeleteView):
     model=Post
