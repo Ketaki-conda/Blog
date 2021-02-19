@@ -1,39 +1,88 @@
 {% extends 'base.html' %}
-
+{% load static %}
+{% block title %}
+Blog Home
+{% endblock %}
   {% block content %}
-  <ul>
-  {% for post in object_list %}
-  <br>
-  <br>
 
-<div class="container">
-  <div class="row">
-  <div class="example-1 card">
-    <div class="wrapper">
+  <section class="new-blogs">
+    
 
-      <div class="date">
-        <span class="day">{{ post.post_date}}</span>
+    {% for post in newposts %}
+    <div class="newpost" id= "newpost{{forloop.counter}}">
+      <div class="container">
+        <div class="newpost-text">
+        <h1 class="newpost-title">
+          {{post.title}}
+        </h1>
+        <p class = "newpost-description">
+          {{ post.body|slice:"200" }} ...
+        </p>
+        <br>
+        <br>
+        <a href="{% url 'article-detail' post.pk %}" class="newpost-link">Read More</a>
       </div>
-
-		 <div class="image">
-       {% if post.image %}
-       <img width="200" height="200" src="{{ post.image.url }}">
-       {% endif %}
-		 </div>
-
-      <div class="data">
-        <div class="content">
-          <span class="author">{{ post.author.first_name }}</span>
-          <h1 class="title"><a href="#" class="cardTitle"> {{ post.title }}</a></h1>
-          <p class="text">{{ post.body|slice:"300" }}</p>
-          <center><h5><a href="{% url 'article-detail' post.pk %}">... Read More</a> </h5></center>
+        <div class="newpost-img">
+          <img src="{{ post.image.url }}" alt="">
         </div>
       </div>
-
     </div>
+    
+    
+    {% endfor %}
+    <div class="pagination">
+    <div class= "upper-arrow" onclick="down()"><ion-icon name="arrow-back-outline"></ion-icon></div>
+    {% for i in newposts %}
+    {% ifequal forloop.counter 1 %}
+    <div class="pagination-x active-page"  id = "page{{forloop.counter0}}" onclick="changeblog({{forloop.counter0}})"></div>  
+    {% else %}
+    <div class="pagination-x" id = "page{{forloop.counter0}}" onclick="changeblog({{forloop.counter0}})"></div>  
+    {% endifequal %}
+    {% endfor %}
+    <div class= "upper-arrow" onclick="up()"><ion-icon name="arrow-forward-outline"></ion-icon></div>
+    </div>
+    <p id="counter" class="newpost-number">01</p>
+
+  </section>
+  <div class="blog-rect">
   </div>
-</div>
-</div>
-  {% endfor%}
-  </ul>
+  <div class='line-img'><img src="{% static 'img/lines.png' %}" alt=""></div>
+  
+{% endblock %}
+{% block js %}
+<script>
+  var id = 0;
+  function up(){
+    id++;
+    if(id == 4){
+      id = 0
+    }
+    changeblog(id)
+  }
+
+  function down(){
+    id--;
+    if(id == -1){
+      id = 3
+    }
+    changeblog(id)
+  }
+
+  function changeblog(id){
+    id = id*100
+    var items = document.getElementsByClassName('newpost');
+    for (var i = 0; i < items.length ; i++){
+      items[i].style.transform = 'translateY(-'+id.toString()+ '%)'
+    }
+    document.getElementById('counter').innerHTML = ''
+    document.getElementById('counter').innerHTML = '0' + ((id/100)+1).toString();
+    id = id/100
+    var elems = document.querySelectorAll(".active-page");
+
+    [].forEach.call(elems, function(el) {
+        el.classList.remove("active-page");
+    });
+    document.getElementById('page' + id.toString()).classList.add('active-page');
+  }
+</script>
 {% endblock %}

@@ -1,18 +1,28 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView,UpdateView,DeleteView
+from django.views.generic import ListView, DetailView, CreateView,UpdateView,DeleteView,View,FormView            
 from .models import Post,Comment,IpModel,Topic
 from .forms import PostForm,CommentForm,TopicForm
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.db.models import Count
 
-#def home(request):
-#    return render(request,'home.html',{})
 
-class HomeView(ListView):
-    model=Post
+class HomeView(View):
     template_name="home.html"
-    ordering=['-id']
+
+    def get(self,request):
+        newposts = Post.objects.all().order_by('post_date').order_by('-id')[:4]
+        topics = Topic.objects.all()
+        trending = Post.objects.annotate(like_count=Count('likes')).order_by('-like_count')
+        featured = Post.objects.filter(isFeatured=True).order_by('-id')
+        context = {
+            **{'newposts':newposts},
+            **{'topics':topics},
+            **{'trending':trending},
+            **{'featured':featured},
+        }
+        return render(request,self.template_name,context)
 
 def get_client_ip(request):
     x_forwarded_for=request.META.get('HTTP_X_FORWARDED_FOR')
@@ -47,6 +57,11 @@ class AddPostView(CreateView):
     model=Post
     form_class=PostForm
     template_name="add_post.html"
+
+    def form_valid(self ,form):
+        form.send_mail()
+        return super().form_valid(form)
+
 
 class AddTopicView(CreateView):
     model=Topic
