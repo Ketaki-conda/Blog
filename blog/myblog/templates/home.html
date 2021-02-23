@@ -13,7 +13,7 @@ Blog Home
       <div class="container">
         <div class="newpost-text">
         <h1 class="newpost-title">
-          {{post.title}}
+          {{post.title|slice:40}}..
         </h1>
         <p class = "newpost-description">
           {{ post.body|slice:"200" }} ...
@@ -47,9 +47,177 @@ Blog Home
   <div class="blog-rect">
   </div>
   <div class='line-img'><img src="{% static 'img/lines.png' %}" alt=""></div>
+
+  <section class='topics-section'>
+    <div class="row">
+      <div class="col-md-8">
+  <div class="swiper-container ">
+    <div class="grey-rect"></div>
+
+    <div class="swiper-wrapper">
+      {% for i in topics %}
+      <div class="swiper-slide">
+        <a href="" class='topic-link'>
+        <center>
+        <div class="topic-icon">{{i.icon | safe }}</div>
+        <div class="topic-name">{{i.topic_name}}</div>
+        </center>
+      </a>
+      </div>
+      {% endfor %}
+    </div>
+    <!-- Add Arrows -->
+    <div class="swiper-arrows">
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+  </div>
+  </div>
+</div>
+<div class="col-md-1"></div>
+<div class="col-md-3 topic-title">
+  <br><br>
+  <h2 class="red-title">
+    Top <br>
+  </h2>
+  <h2 class="black-title">
+    Topics
+  </h2>
+  <div class="outline-rect"></div>
+</div>
+</div>
+  </section><br><br>
+
+  <section class="form-section">
+      <div class="green-rect">
+        <img src="{% static 'img/lines.png' %}" alt="">
+      </div>
+      <div class="container">
+        <br><br>
+        <div class="row">
+          <div class="col-md-6 hide-on-small form-img">
+            <img src="{% static 'img/form-img.jpg' %}" alt="">
+          </div>
+          <div class="col-md-1"></div>
+          <div class="col-md-5">
+            <br><br>
+              <h2 class="red-title">
+                Get An <br>
+              </h2>
+              <h2 class="black-title">
+                Update
+              </h2>
+              <div class="outline-rect"></div>
+              <br><br>
+            <form method="POST">
+              <!-- Very Important csrf Token -->
+              {% csrf_token %}
+                  {% for i in form %}
+                  {{i}}
+                  {% endfor %}
+                  <br><br>
+                  <input type="submit" name="Subscribe" class = 'submit-btn'>
+                  </form>
+          </div>
+        </div>
+      </div>
+  </section>
+  <br><br><br><br><br>
+  <section class="most-liked-section">
+    <div class="container">
+      <div class="row">
+        <h2 class="red-title">
+          Top <br>
+        </h2>
+        <h2 class="black-title">
+          Liked
+        </h2>
+        <div class="outline-rect-new" style="width: 170px;height: 100px;"></div>
+      </div>
+      <br>
+      <div class="row">
+        {% for i in trending %}
+        <div class='col-md-3'>
+          <div class="like-post">
+          <div class="red">{{i.topic}}</div><br>
+          <h3 class='liked-title'>{{i.title|slice:40}}..</h3>
+          <p class="liked">{{i.body|slice:135}}...</p>
+          <hr style="color: #666;margin: 10px;"><br>
+          <img src="{{ i.image.url }}" width="80%" height= '140' alt="">
+          
+          <center>
+        <a href="{% url 'article-detail' i.pk %}" class="newpost-link">Read More</a>
+      </center>
+        <br>
+        
+      </div>
+        </div>
+        
+        {% endfor %}
+      </div>
+    </div>
+  </section><br><br>
+
+  <section class="random-section" style="background-image: url('{{random.image.url}}');">
+    <div class="" style="width:100%;background-image:linear-gradient(#0007,#0007);color:#fff">
+      <div class="container">
+    <center><br>
+      <h2>{{random.title}}</h2><br>
+      <p>{{random.body|slice:300}}</p><br>
+      <a href="{% url 'article-detail' random.pk %}" class="newpost-link">Read More</a>
+<br><br><br>
+    </center>
+  </div>
+    </div>
+  </section><br><br>
+
+<section class="featured-section" >
+    <div class="container">
+      <div class="row">
+        <h2 class="red-title">
+          Featured <br>
+        </h2>
+        <h2 class="black-title">
+          Articles
+        </h2>
+        <div class="outline-rect-new" style="width: 190px;height: 100px;"></div>
+      </div>
+      <br>
+      <div class="row">
+        {% for post in featured %}
+        <div class="col-md-4" style="margin-bottom: 250px;">
+    <div class="feat-img"><img style='box-shadow:10px 10px 15px #0003;' src="{{post.image.url}}" width="75%" alt=""></div>
+          <div class="feat-text">
+            <div class="red">By{{post.author}}</div><br>
+            <h5 class="feat-t">{{post.title|slice:20}}..</h5>
+            <p class="feat-p">{{post.body|slice:100}}..</p>
+            <a href="{% url 'article-detail' post.pk %}" class='red'>Read More</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      </div>
+</section>
+
+<footer>
   
+</footer>
+
 {% endblock %}
 {% block js %}
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+<!-- Initialize Swiper -->
+<script>
+  var swiper = new Swiper('.swiper-container', {
+    slidesPerView: 4,
+    centeredSlides: true,
+    spaceBetween: 30,
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+  });
+</script>
 <script>
   var id = 0;
   function up(){

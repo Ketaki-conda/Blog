@@ -1,28 +1,56 @@
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView,UpdateView,DeleteView,View,FormView            
+from django.shortcuts import render,redirect
+from django.views.generic import ListView, DetailView, CreateView,UpdateView,DeleteView,View,FormView
+from subscribe.models import  SubscribeModel     
+from blog.settings import EMAIL_HOST_USER       
 from .models import Post,Comment,IpModel,Topic
 from .forms import PostForm,CommentForm,TopicForm
+from subscribe.forms import Subscribe
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.db.models import Count
+from django.core.mail import send_mail
+import datetime
+import random
 
 
 class HomeView(View):
     template_name="home.html"
 
     def get(self,request):
-        newposts = Post.objects.all().order_by('post_date').order_by('-id')[:4]
+        newposts = Post.objects.all().order_by('-id')[:4]
+        sub = Subscribe()
         topics = Topic.objects.all()
         trending = Post.objects.annotate(like_count=Count('likes')).order_by('-like_count')
-        featured = Post.objects.filter(isFeatured=True).order_by('-id')
+        featured = Post.objects.filter(isFeatured=True).order_by('-id')[:4]
+        r = Post.objects.all()
+        randomblog = r[random.randint(0,len(r)-1)]
         context = {
             **{'newposts':newposts},
             **{'topics':topics},
             **{'trending':trending},
             **{'featured':featured},
+            **{'random':randomblog},
+            **{'form':sub}
         }
         return render(request,self.template_name,context)
+    
+    def post(self,request):
+        if request.method == 'POST':
+            sub = Subscribe(request.POST)
+            if(sub.is_valid()):
+                a = SubscribeModel(email = str(sub['Email'].value()),created_date = datetime.datetime.now())
+                a.save()
+                subject = 'Welcome to OurBlog'
+                message = 'We are blessed to serve you!'
+                recepient = str(sub['Email'].value())
+                send_mail(subject,
+                    message, EMAIL_HOST_USER, [recepient], fail_silently = False)
+                return render(request, 'subscribe/success.html', {'recepient': recepient})
+            else:
+                return redirect('home')
+        else:
+            return redirect('home')
 
 def get_client_ip(request):
     x_forwarded_for=request.META.get('HTTP_X_FORWARDED_FOR')
