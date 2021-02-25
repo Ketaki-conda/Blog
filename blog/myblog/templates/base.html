@@ -18,17 +18,18 @@
 
 
     <nav class="blog-nav">
+      <a href="{% url 'home' %}" class="logo"><img src="{% static 'img/logo.png' %}" style="margin-left: 50px;position: absolute;top: 0;left: 0;border: none;" height=70 alt=""></a>
       <ul style="list-style:none">
         <div class= "blog-nav-rect"></div>
-        <li><a href="{% url 'home' %}" class="logo"><img src="{% static 'img/logo.png' %}"  height=70 alt=""></a></li>
         {% if user.is_authenticated %}
-        <li><a href="{% url 'add_post' %}">Add Post</a></li>
-        <li><a href="{% url 'add_topic' %}">Add Topic</a></li>
-        <li><a href="{% url 'logout' %}">Logout</a></li>
+        <li style="--i:2"><a href="{% url 'add_post' %}" >Add Post</a></li>
+        <li style="--i:3"><a href="{% url 'add_topic' %}" >Add Topic</a></li>
+        <li style="--i:4"><a href="{% url 'logout' %}" >Logout</a></li>
         {% else %}
-        <li><a href="{% url 'login' %}">Login</a></li>
+        <li style="--i:2"><a href="{% url 'login' %}" >Login</a></li>
         {% endif %}
       </ul>
+      <a id="show-blog-nav" onclick='showblognav()'><ion-icon name="menu-outline"></ion-icon></a>
     </nav>
         
     <br>
@@ -36,6 +37,88 @@
     {% block content %}
 
     {% endblock %}
+    
+<footer>
+  <div class="sub-bar">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-5">
+          <h2 style="color:#fff">
+          Join Our <b>Blog.</b><br>
+          <b>Get regular</b> <span class="red">Updates.</span> 
+        </h2>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-6">
+        <form method="POST">
+          <!-- Very Important csrf Token -->
+          {% csrf_token %}
+          <br>
+          <div class="row">
+
+          <div class="col-md-9">
+            {% if form1 %}
+              {% for i in form1 %}
+              {{i}}
+              {% endfor %}
+            {% else %}
+            <input type="text" name="" id="" class="sub-form-field" placeholder="Email">
+            {% endif %}
+            </div>
+            <div class="col-md-3">
+              <input type="submit" name="Subscribe" value="Subscribe" class = 'submit-btn' style="background-color: #FB4F64;">
+            </div>
+          </div>
+
+              </form>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-fmain">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-5">
+          <a href="/blog"><img src="{% static 'img/logo.png' %}" height='70px' alt=""></a>
+          <p></p>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus aspernatur hic ullam molestias autem commodi odit totam nobis illo enim. Sunt </p>
+        </div>
+        <div class="col-md-3">
+          <h3>Quick <span class="red">Links</span> </h3>
+          <ul class="footer-links">
+            <li><a href="">Home</a></li>
+            <li><a href="">Blog Home</a></li>
+            <li><a href="">Contact Us</a></li>
+            <li><a href="">Career</a></li>
+          </ul>
+        </div>
+        <div class="col-md-4">
+            <h3>Top <span class="red">Topics</span> </h3>
+            <ul class="footer-links">
+              {% if topics %}
+            {% for i in topics %}
+              <li> <a href="">{{i.topic_name}}</a> </li>
+            {% endfor %}
+            {% else %}
+            <li> <a href="">Topic 1</a> </li>
+            <li> <a href="">Topic 2</a> </li>
+            <li> <a href="">Topic 3</a> </li>
+            <li> <a href="">Topic 4</a> </li>
+
+            {% endif %}
+          </ul>
+        </div>
+      </div><br>
+    </div>
+    <hr style='background-color:#fff8'>
+  <center>
+    Copyright &copy <span class="red">K.L.Acharya</span>AndAssociates.
+  </center>
+  <br>
+  </div>
+  
+</footer>
     {% comment %}
     <div class="jumbotron jumbotron-fluid">
       <div class="container">
@@ -54,11 +137,19 @@
     var scroll = $(window).scrollTop();
     if (scroll > 0) {
         $(".blog-nav").addClass("blog-nav-hover");
+        $("#show-blog-nav").addClass("blog-btn-sc");
     }else{
       $(".blog-nav").removeClass("blog-nav-hover");
+      $("#show-blog-nav").removeClass("blog-btn-sc");
+
     }
 }); 
+
+function showblognav(){
+  $('.blog-nav ul li').toggleClass('blosf');
+}
   </script>
+
   {% block js %}
   {% endblock %}
   </body>

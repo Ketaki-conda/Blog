@@ -11,10 +11,10 @@ class PostForm(forms.ModelForm):
         model=Post
         fields=('title','author','image','body','isFeatured','topic')
         widgets={
-        'title': forms.TextInput(attrs={'class':'form-control'}),
-        'author': forms.Select(attrs={'class':'form-control'}),
-        'body': forms.Textarea(attrs={'class':'form-control'}),
-        'topic':forms.Select(attrs={'class':'form-control'})
+        'title': forms.TextInput(attrs={'class':'sub-form-field mb-3'}),
+        'author': forms.Select(attrs={'class':'sub-form-field mb-3'}),
+        'body': forms.Textarea(attrs={'class':'sub-form-field mb-3'}),
+        'topic':forms.Select(attrs={'class':'sub-form-field mb-3'})
         }
     def send_mail(self):
         a = Post.objects.order_by('-id')[0]
@@ -45,8 +45,8 @@ class CommentForm(forms.ModelForm):
         model=Comment
         fields=('name','body')
         widgets={
-        'name': forms.TextInput(attrs={'class':'form-control'}),
-        'body': forms.Textarea(attrs={'class':'form-control'}),
+        'name': forms.TextInput(attrs={'class':'sub-form-field mb-3','placeholder':'Name'}),
+        'body': forms.Textarea(attrs={'class':'sub-form-field mb-3','placeholder':'Enter Your Comment Here.  '}),
 
         }
 
@@ -55,6 +55,6 @@ class TopicForm(forms.ModelForm):
         model = Topic
         fields = ('topic_name','icon')
         widgets={
-        'topic_name': forms.TextInput(attrs={'class':'form-control'}),
-        'icon': forms.TextInput(attrs={'class':'form-control'}),
+        'topic_name': forms.TextInput(attrs={'class':'sub-form-field mb-3'}),
+        'icon': forms.TextInput(attrs={'class':'sub-form-field mb-3'}),
         }

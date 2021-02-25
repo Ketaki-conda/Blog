@@ -12,8 +12,4 @@ urlpatterns = [
     path('like/<int:pk>', views.postLike, name='blog_like'),
     path('article/<int:pk>/comment/',AddCommentView.as_view(), name='add_comment'),
     path('subscribe/', include('subscribe.urls')),
-
-
-
-
 ]

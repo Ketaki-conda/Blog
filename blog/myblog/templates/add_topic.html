@@ -3,15 +3,18 @@
 {% block content %}
 {% if user.is_authenticated %}
 <div class="container">
-  <h1>Add Topic...</h1>
+  <center>
+  <h1>Add <span class="red">Topic...</span> </h1>
+  </center>
   <br>
   <br>
   <div class="form-group">
     <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-    <button class="btn btn-info">Post</button>
+    <button class="submit-btn">ADD</button> 
 </div>
+<br>
 </div>
 
 {% else %}

@@ -111,7 +111,7 @@ Blog Home
             <form method="POST">
               <!-- Very Important csrf Token -->
               {% csrf_token %}
-                  {% for i in form %}
+                  {% for i in form1 %}
                   {{i}}
                   {% endfor %}
                   <br><br>
@@ -140,7 +140,7 @@ Blog Home
           <div class="like-post">
           <div class="red">{{i.topic}}</div><br>
           <h3 class='liked-title'>{{i.title|slice:40}}..</h3>
-          <p class="liked">{{i.body|slice:135}}...</p>
+          <p class="">{{i.body|slice:135}}...</p>
           <hr style="color: #666;margin: 10px;"><br>
           <img src="{{ i.image.url }}" width="80%" height= '140' alt="">
           
@@ -187,7 +187,7 @@ Blog Home
         <div class="col-md-4" style="margin-bottom: 250px;">
     <div class="feat-img"><img style='box-shadow:10px 10px 15px #0003;' src="{{post.image.url}}" width="75%" alt=""></div>
           <div class="feat-text">
-            <div class="red">By{{post.author}}</div><br>
+            <div class="red">By {{post.author}}</div><br>
             <h5 class="feat-t">{{post.title|slice:20}}..</h5>
             <p class="feat-p">{{post.body|slice:100}}..</p>
             <a href="{% url 'article-detail' post.pk %}" class='red'>Read More</a>
@@ -196,11 +196,8 @@ Blog Home
         {% endfor %}
       </div>
       </div>
-</section>
+</section><br><br>
 
-<footer>
-  
-</footer>
 
 {% endblock %}
 {% block js %}
